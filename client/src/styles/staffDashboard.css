@@ -1,0 +1,477 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ─── VARIABLES ─────────────────────────────────────────────── */
+
+:root{
+  --primary: var(--accent-color);
+  --primary-50: var(--accent-soft);
+  --primary-dark: var(--accent-hover);
+  --primary-light: #ffffff;
+  --primary-muted: var(--accent-soft);
+
+  --bg-dark: var(--bg-main);
+  --bg-panel: var(--bg-card);
+
+  --border: var(--gray-200);
+
+  --text: var(--text-main);
+  --text-muted: var(--gray-400);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+*,*::before,*::after{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+/* ─── DASHBOARD ───────────────────────────────────────────── */
+
+.staff-dashboard{
+  min-height:100vh;
+  background:var(--bg-dark);
+
+  background-image:
+  radial-gradient(circle at 0% 0%, rgba(255,255,255,0.03) 0%, transparent 50%),
+  radial-gradient(circle at 100% 100%, rgba(255,255,255,0.02) 0%, transparent 50%);
+
+  font-family:'DM Sans',sans-serif;
+  color:var(--text-main);
+}
+
+/* ─── HEADER ────────────────────────────────────────────────── */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;  /* brand | clock | right */
+  padding: 0 40px;
+  height: 70px;
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--primary);
+  box-shadow: 0 2px 12px rgba(192,23,29,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 16px;
+}
+
+/* ─── LEFT — Brand ───────────────────────────────────────────── */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.header-brand-icon { font-size: 26px; line-height: 1; }
+.header-brand h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.7rem;
+  letter-spacing: 2px;
+  color: var(--primary);
+  margin: 0;
+  line-height: 1.1;
+}
+.header-sub {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+/* ─── CENTER — Clock ─────────────────────────────────────────── */
+.header-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-muted);
+  border: 1px solid rgba(192,23,29,0.12);
+  border-radius: var(--radius-sm);
+  padding: 6px 20px;
+  line-height: 1.35;
+  flex-shrink: 0;
+}
+.clock-time {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+.clock-date {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+/* ─── RIGHT — Actions + User ─────────────────────────────────── */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* thin vertical divider between manage-menu and user card */
+.header-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.header-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--primary-muted);
+  border: 1px solid rgba(192,23,29,0.12);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+}
+.header-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #000000;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(255,255,255,0.2);
+}
+.header-user-info .user-name {
+  font-size: 13px; font-weight: 600;
+  color: var(--primary);
+  margin: 0; line-height: 1.3;
+}
+.header-user-info .user-role {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ─── MANAGE MENU BTN ────────────────────────────────────────── */
+.menu-manage-btn {
+  position: relative;
+  overflow: hidden;
+  background: var(--primary);
+  color: var(--bg-panel);
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+}
+.menu-manage-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255,255,255,0.2);
+}
+.menu-manage-btn:active { transform: translateY(0); box-shadow: none; }
+/* ripple */
+.menu-manage-btn::after {
+  content: '';
+  position: absolute;
+  width: 0; height: 0;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  opacity: 0;
+}
+.menu-manage-btn:active::after {
+  width: 200px; height: 200px; opacity: 0;
+  transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease;
+}
+
+/* ─── LOGOUT BTN ─────────────────────────────────────────────── */
+.logout-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: transparent;
+  border: 1.5px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.logout-btn:hover {
+  background: var(--primary);
+  color: var(--bg-panel);
+  box-shadow: 0 4px 12px rgba(192,23,29,0.3);
+  transform: translateY(-1px);
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .clock-date { display: none; }
+  .header-sub { display: none; }
+}
+@media (max-width: 768px) {
+  .dashboard-header { height: auto; flex-wrap: wrap; padding: 12px 20px; }
+  .header-clock { order: 3; width: 100%; flex-direction: row; gap: 8px; justify-content: center; }
+  .clock-date { display: block; }
+  .menu-manage-btn span { display: none; } /* show only icon on mobile */
+}
+@media (max-width: 640px) {
+  .header-user-info { display: none; }
+  .header-user-card { padding: 6px; }
+}
+
+
+/* ─── ORDER BOARD ───────────────────────────────────────── */
+
+.orders-board{
+  display:grid;
+
+  grid-template-columns:repeat(4,1fr);
+
+  gap:24px;
+  padding:32px 40px;
+
+  max-width:1400px;
+  margin:auto;
+}
+
+/* ─── ORDER COLUMN ─────────────────────────────────────── */
+
+.order-column{
+  background: var(--bg-card);
+
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+
+  box-shadow:var(--shadow-sm);
+
+  display:flex;
+  flex-direction:column;
+
+  height:70vh;
+  overflow-y:auto;
+}
+
+/* COLUMN HEADER */
+
+.order-column h2{
+  font-family:'Bebas Neue',sans-serif;
+
+  font-size:1.1rem;
+  letter-spacing:2px;
+
+  text-transform:uppercase;
+
+  color:white;
+
+  padding:14px 20px;
+}
+
+/* COLUMN COLORS */
+
+.order-column:nth-child(1) h2{
+  background: var(--gray-200);
+  color: var(--text-main);
+}
+
+.order-column:nth-child(2) h2{
+  background: var(--gray-400);
+  color: #000000;
+}
+
+.order-column:nth-child(3) h2{
+  background: var(--gray-600);
+  color: #ffffff;
+}
+
+.order-column:nth-child(4) h2{
+  background: #ffffff;
+  color: #000000;
+}
+
+/* ─── ORDER CARD ───────────────────────────────────────── */
+
+.order-card{
+  margin:12px 14px;
+
+  background: var(--bg-secondary);
+  border:1px solid var(--border);
+
+  border-radius:var(--radius-sm);
+
+  padding:16px;
+
+  box-shadow:var(--shadow-sm);
+
+  transition:.2s;
+
+  animation:slideIn .25s ease both;
+}
+
+@keyframes slideIn{
+  from{opacity:0;transform:translateY(8px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+.order-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-md);
+}
+
+.order-card h3{
+  font-family:'Bebas Neue';
+
+  font-size:1.15rem;
+  letter-spacing:1.5px;
+
+  color:var(--primary);
+
+  margin-bottom:10px;
+
+  padding-bottom:10px;
+  border-bottom:1px dashed var(--border);
+}
+
+.order-card ul{
+  list-style:none;
+
+  display:flex;
+  flex-direction:column;
+
+  gap:6px;
+  margin-bottom:14px;
+}
+
+.order-card ul li{
+  font-size:.88rem;
+
+  background:var(--primary-muted);
+  border-radius:5px;
+
+  padding:5px 10px;
+}
+
+/* ─── ACTION BUTTONS ───────────────────────────────────── */
+
+.action-btn{
+  width:100%;
+
+  padding:10px;
+
+  border:none;
+  border-radius:var(--radius-sm);
+
+  font-size:.82rem;
+  font-weight:600;
+
+  cursor:pointer;
+}
+
+/* PREPARING BUTTON */
+
+.preparing-btn{
+  background:var(--primary);
+  color:white;
+}
+
+.preparing-btn:hover{
+  background:var(--primary-dark);
+}
+
+/* READY BUTTON */
+
+.ready-btn{
+  background: var(--bg-main);
+
+  color:var(--primary);
+  border:1.5px solid var(--primary);
+}
+
+.ready-btn:hover{
+  background:var(--primary-muted);
+}
+
+/* COMPLETE BUTTON */
+
+.complete-btn{
+  background: #ffffff;
+  color: #000000;
+}
+
+/* ─── SCROLLBAR ───────────────────────────────────────── */
+
+.order-column::-webkit-scrollbar{
+  width:4px;
+}
+
+.order-column::-webkit-scrollbar-thumb{
+  background:rgba(192,23,29,0.25);
+  border-radius:4px;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+
+@media (max-width:1024px){
+
+  .orders-board{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .order-column:last-child{
+    grid-column:1/-1;
+  }
+
+  .clock-date{
+    display:none;
+  }
+
+}
+
+@media (max-width:768px){
+
+  .dashboard-header{
+    flex-wrap:wrap;
+    height:auto;
+    padding:12px 20px;
+  }
+
+  .header-clock{
+    order:3;
+    width:100%;
+    flex-direction:row;
+    justify-content:center;
+    gap:10px;
+  }
+
+}
+
+@media (max-width:640px){
+
+  .orders-board{
+    grid-template-columns:1fr;
+  }
+
+  .header-user-info{
+    display:none;
+  }
+
+}
