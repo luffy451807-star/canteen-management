@@ -85,6 +85,7 @@ exports.createOrder = async (req, res) => {
 exports.payOrder = async (req, res) => {
   const { orderId } = req.params;
   const userId = req.user.id;
+  const { payerName, transactionId } = req.body;
 
   try {
     const [rows] = await db.query(
@@ -106,9 +107,11 @@ exports.payOrder = async (req, res) => {
     await db.query(
       `UPDATE orders 
        SET payment_status = 'PENDING_VERIFICATION', 
-           payment_method = 'QR' 
+           payment_method = 'QR',
+           payer_name = ?,
+           transaction_id = ?
        WHERE id = ?`,
-      [orderId]
+      [payerName || null, transactionId || null, orderId]
     );
 
     res.json({ message: "Payment submitted for verification" });
@@ -202,7 +205,7 @@ exports.getMyOrders = async (req, res) => {
 exports.getAllOrders = async (req, res) => {
   try {
     const { orderStatus, paymentStatus } = req.query;
-    let query = "SELECT orders.*, users.name as user_name FROM orders JOIN users ON orders.user_id = users.id";
+    let query = "SELECT orders.*, users.name as user_name, users.email as user_email FROM orders JOIN users ON orders.user_id = users.id";
     let params = [];
 
     if (orderStatus || paymentStatus) {
@@ -233,7 +236,7 @@ exports.getOrderById = async (req, res) => {
   const { orderId } = req.params;
   try {
     const [orders] = await db.query(
-      `SELECT orders.*, users.name as user_name FROM orders JOIN users ON orders.user_id = users.id WHERE orders.id = ?`,
+      `SELECT orders.*, users.name as user_name, users.email as user_email FROM orders JOIN users ON orders.user_id = users.id WHERE orders.id = ?`,
       [orderId]
     );
 
@@ -258,19 +261,23 @@ exports.deleteOrder = async (req, res) => {
   const userId = req.user.id;
 
   try {
+    // First delete items
+    await db.query(`DELETE FROM order_items WHERE order_id = ?`, [orderId]);
+
+    // Then delete order
     const [result] = await db.query(
       `DELETE FROM orders WHERE id = ? AND user_id = ? AND payment_status = 'UNPAID' AND order_status = 'PLACED'`,
       [orderId, userId]
     );
 
     if (!result.affectedRows) {
-      return res.status(400).json({ message: "Order cannot be deleted" });
+      return res.status(400).json({ message: "Order cannot be deleted or already deleted" });
     }
 
     res.json({ message: "Order deleted successfully" });
   } catch (err) {
+    console.error("Delete order error:", err);
     res.status(500).json({ message: err.message });
   }
 };
 
-  

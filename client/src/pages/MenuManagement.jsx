@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import axios from "../api/axios";
 import "../styles/menuManagement.css";
 
 const MenuManagement = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -51,7 +53,7 @@ const MenuManagement = () => {
       setFormData({ name: "", price: "", category: "", isAvailable: true, image: "" });
       fetchMenu();
     } catch (err) {
-      alert("Failed to save item");
+      alert("Failed to save item: " + (err.response?.data?.message || err.message));
     }
   };
 
@@ -73,7 +75,7 @@ const MenuManagement = () => {
         await axios.delete(`/menu/delete/${id}`);
         fetchMenu();
       } catch (err) {
-        alert("Failed to delete item");
+        alert("Failed to delete item: " + (err.response?.data?.message || err.message));
       }
     }
   };
@@ -101,9 +103,11 @@ const MenuManagement = () => {
           <p>Manage your canteen menu items</p>
         </div>
         <div className="header-actions">
-          <button className="add-btn" onClick={() => { setShowModal(true); setEditingItem(null); }}>
-            + Add New Item
-          </button>
+          {user?.role === 'admin' && (
+            <button className="add-btn" onClick={() => { setShowModal(true); setEditingItem(null); }}>
+              + Add New Item
+            </button>
+          )}
           <button className="back-btn" onClick={() => navigate(-1)}>
             ← Back
           </button>
@@ -148,8 +152,12 @@ const MenuManagement = () => {
                 </td>
                 <td>
                   <div className="row-actions">
-                    <button className="edit-icon-btn" onClick={() => handleEdit(item)}>Edit</button>
-                    <button className="delete-icon-btn" onClick={() => handleDelete(item.id)}>Delete</button>
+                    {user?.role === 'admin' && (
+                      <>
+                        <button className="edit-icon-btn" onClick={() => handleEdit(item)}>Edit</button>
+                        <button className="delete-icon-btn" onClick={() => handleDelete(item.id)}>Delete</button>
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>

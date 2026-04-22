@@ -12,6 +12,9 @@ const Payment = () => {
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
 
+    const [payerName, setPayerName] = useState("");
+    const [transactionId, setTransactionId] = useState("");
+
     useEffect(() => {
         const fetchOrder = async () => {
             try {
@@ -27,9 +30,14 @@ const Payment = () => {
     }, [orderId]);
 
     const handlePaid = async () => {
+        if (!payerName.trim() || !transactionId.trim()) {
+            alert("Please enter the exact Payer Name and Transaction ID/UTR.");
+            return;
+        }
+    
         setSubmitting(true);
         try {
-            await axios.post(`/orders/pay/${orderId}`);
+            await axios.post(`/orders/pay/${orderId}`, { payerName, transactionId });
             setOrder(prev => ({ ...prev, payment_status: 'PENDING_VERIFICATION' }));
             // Poll for status update
             const pollInterval = setInterval(async () => {
@@ -64,7 +72,7 @@ const Payment = () => {
             <div className="payment-card">
                 <div className="payment-header">
                     <h1>Complete Payment</h1>
-                    <p>Order ID: <strong>{orderId}</strong></p>
+                    <p>Order ID: <strong>ORD-{String(orderId).padStart(4, '0')}</strong></p>
                 </div>
 
                 <div className="payment-qr-section">
@@ -89,18 +97,41 @@ const Payment = () => {
                 <div className="payment-instructions">
                     <p>1. Scan the QR code using any UPI app.</p>
                     <p>2. Complete the payment of <strong>₹{order.total_amount}</strong>.</p>
-                    <p>3. Once done, click the button below.</p>
-                    {order.payment_status === 'PENDING_VERIFICATION' && (
-                        <p style={{ color: '#d97706', fontWeight: 'bold' }}>⏳ Payment submitted for verification. Please wait...</p>
-                    )}
+                    <p>3. Enter the Payer Name exactly as per your UPI App, and the Transaction/UTR number.</p>
                 </div>
+
+                {order.payment_status !== 'PENDING_VERIFICATION' && (
+                    <div className="payment-inputs" style={{display: 'flex', flexDirection: 'column', gap: '10px', marginTop:'15px', marginBottom:'15px'}}>
+                        <input 
+                            type="text" 
+                            placeholder="Payer Name (e.g. John Doe)" 
+                            value={payerName} 
+                            onChange={(e) => setPayerName(e.target.value)}
+                            style={{padding: '10px', borderRadius: '5px', border: '1px solid #ccc', fontSize: '14px', width: '100%'}}
+                        />
+                        <input 
+                            type="text" 
+                            placeholder="Transaction ID / UTR Number" 
+                            value={transactionId} 
+                            onChange={(e) => setTransactionId(e.target.value)}
+                            style={{padding: '10px', borderRadius: '5px', border: '1px solid #ccc', fontSize: '14px', width: '100%'}}
+                        />
+                    </div>
+                )}
+                
+                {order.payment_status === 'PENDING_VERIFICATION' && (
+                    <div className="payment-instructions">
+                        <p style={{ color: '#d97706', fontWeight: 'bold' }}>⏳ Payment submitted for verification. Please wait...</p>
+                    </div>
+                )}
 
                 <div className="payment-actions">
                     {order.payment_status !== 'PENDING_VERIFICATION' ? (
                         <button 
                             className="paid-btn" 
                             onClick={handlePaid} 
-                            disabled={submitting}
+                            disabled={submitting || !payerName.trim() || !transactionId.trim()}
+                            style={{ opacity: (!payerName.trim() || !transactionId.trim()) ? 0.6 : 1 }}
                         >
                             {submitting ? "Processing..." : "I Have Paid"}
                         </button>

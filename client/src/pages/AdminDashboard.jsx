@@ -128,8 +128,15 @@ const AdminDashboard = () => {
                 <tbody>
                   {orders.map(order => (
                     <tr key={order.id}>
-                      <td>#{order.id}</td>
-                      <td>{order.user_name}</td>
+                      <td style={{ fontWeight: '600', color: '#111827' }}>
+                        ORD-{String(order.id).padStart(4, '0')}
+                      </td>
+                      <td>
+                        <div style={{ fontWeight: '500', color: '#1f2937' }}>{order.user_name || 'Unknown User'}</div>
+                        <div style={{ fontSize: '0.85em', color: '#6b7280' }}>{order.user_email || 'No Email'}</div>
+                        {order.payer_name && <div style={{ fontSize: '0.85em', color: '#10b981', marginTop: '4px', fontWeight: '500' }}>Payer: {order.payer_name}</div>}
+                        {order.transaction_id && <div style={{ fontSize: '0.8em', color: '#4b5563' }}>Txn ID: {order.transaction_id}</div>}
+                      </td>
                       <td>
                         <span className="status-badge" style={{ backgroundColor: getStatusColor(order.payment_status) }}>
                           {order.payment_status}

@@ -80,7 +80,7 @@ const OrderCard = ({ order, onPay, onDelete }) => {
       {/* ── Card row ── */}
       <div className="order-card-header">
         <p className="order-id">
-          Order <span>#{String(order.id).padStart(4, "0")}</span>
+          <span>ORD-{String(order.id).padStart(4, "0")}</span>
         </p>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px" }}>
           <span className="order-time">{formatDate(order.created_at)}</span>
@@ -140,7 +140,7 @@ const OrderCard = ({ order, onPay, onDelete }) => {
           >
             {/* Header */}
             <h3 style={{ margin: "0 0 4px 0", fontSize: "16px", fontWeight: 700 }}>
-              Order #{String(order.id).padStart(4, "0")}
+              ORD-{String(order.id).padStart(4, "0")}
             </h3>
             <p style={{ margin: "0 0 8px 0", fontSize: "13px", color: "var(--gray-400)" }}>
               {formatDate(order.created_at)}
@@ -153,6 +153,13 @@ const OrderCard = ({ order, onPay, onDelete }) => {
                 Payment: {paymentMeta.icon} {paymentMeta.label}
               </span>
             </div>
+
+            {(order.payer_name || order.transaction_id) && (
+              <div style={{ marginTop: '12px', padding: '8px', background: 'var(--gray-50)', borderRadius: '8px', fontSize: '12px' }}>
+                {order.payer_name && <div><strong>Payer Name:</strong> {order.payer_name}</div>}
+                {order.transaction_id && <div><strong>Txn ID:</strong> {order.transaction_id}</div>}
+              </div>
+            )}
 
             {/* Progress Bar for in-progress orders */}
             {order.payment_status === 'PAID' && ['PLACED', 'CONFIRMED', 'PREPARING', 'READY'].includes(order.order_status) && (
